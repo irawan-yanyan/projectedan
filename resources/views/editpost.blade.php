@@ -10,12 +10,24 @@
 
 </head>
 <body>
+  @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+  @endif
+  
 <form action="{{ route('updatepost',$post->id)}}" method="post">
     @csrf
     @method('PUT')
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">File Photo User</label>
         <input type="file" name="image" class="form-control" id="exampleFormControlInput1" >
+        <!-- Display Validation Errors -->
+          
       </div>
       <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>

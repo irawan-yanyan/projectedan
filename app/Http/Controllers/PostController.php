@@ -64,11 +64,13 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+        
         // $validated = $request->validate([
         //     'name' => 'required|string|max:255',
         //     'email' => 'required|email|max:255',
         // ]);
         $users = User::with('posts')->find($id);
+        
         return view('edituserpost',compact('users'));
     }
 
@@ -87,42 +89,55 @@ class PostController extends Controller
 
     public function updatePost(Request $request,$idpost)
     {
-     
-    
-        //dd($request->file('image'));
-        $post = Post::findOrFail($idpost);
+        dd($request->hasFile('image'));
        
-        if($request->file('image') == "") {
+        $request->validate([
+            'image'         => 'image|mimes:jpeg,jpg,png|max:2048',
+            'description'   => 'required|min:2',
+           
+        ]);
+
+      //  dd($request->hasFile('image'));
+        //$post = Post::findOrFail($idpost);
+        $post = Post::find($idpost);
+        //get user
+        //$user= User::findOrFail($post->user_id);
+       // dd($user);
+        if($request->hasFile('image')) {
     
-            $post->update([
-                'decription'=> $request->description,
+            // $post->update([
+            //     'decription'=> $request->description,
                 
-            ]);
+            // ]);
+            $post->description = $request->description;
+            
     
         } else {
     
             //hapus old image
-            Storage::disk('local')->delete('public/post/'.$post->image);
+            Storage::disk('local')->delete('public/posts/'.$post->image);
     
             //upload new image
             $image = $request->file('image');
-            $image->storeAs('public/post', $image->hashName());
+            $image->storeAs('public/posts', $image->hashName());
     
-            $post->update([
-                'image'=> $image->hashName(),
-                'description'=> $request->description,
-            ]);
+            // $post->update([
+            //     'image'=> $image->hashName(),
+            //     'description'=> $request->description,
+            // ]);
+            $post->description = $request->description;
+            //$post->image = $image->hashName();
     
         }
     
-        if($post){
+        if($post->update()){
           //  dd('berhasil'.$request->description);
             // redirect dengan pesan sukses
-            return redirect()->route('editpost',['idpost'=>$idpost])->with(['success' => 'Data Berhasil Diupdate!']);
+            return redirect()->route('post.edit',['post'=>$post->user_id])->with(['success' => 'Data Berhasil Diupdate!']);
         }else{
             //dd('gaaga');
             // redirect dengan pesan error
-           return redirect()->route('editpost',['idpost'=>$idpost])->with(['error' => 'Data Gagal Diupdate!']);
+           return redirect()->route('editpost',['post'=>$idpost])->with(['error' => 'Data Gagal Diupdate!']);
         }
       
     }

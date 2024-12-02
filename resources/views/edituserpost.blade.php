@@ -55,9 +55,9 @@
                              
                                    {{-- {{ $items->image}}  --}}
                                 <td class="text-center">
-                                    {{-- <img src="{{ Storage::url('public/post/').$items->image }}" class="rounded" style="width: 150px"> --}}
+                                    <img src="{{ Storage::url('public/post/').$items->image }}" class="rounded" style="width: 150px">
                                     {{-- 8ff71c09866f415adb8417debe2c7628.jpeg --}}
-                                    <img src="{{ Storage::url('public/post/8ff71c09866f415adb8417debe2c7628.jpeg') }}" class="rounded" style="width: 150px"> 
+                                    {{-- <img src="{{ Storage::url('public/post/8ff71c09866f415adb8417debe2c7628.jpeg') }}" class="rounded" style="width: 150px">  --}}
                                 </td>
                           
                              <td>{{ \Str::limit($items->description,30) }} </td>
